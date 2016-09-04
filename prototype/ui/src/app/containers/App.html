@@ -1,6 +1,7 @@
 <div class="grid-frame">
-  <Navigation boxes="$ctrl.boxes" selected-box="$ctrl.selectedBox" box-selected="$ctrl.selectBox(box)"
+  <Navigation boxes="$ctrl.boxes" selected-box="$ctrl.selectedBox" on-box-selected="$ctrl.selectBox(box)"
               class="grid-block small-3 medium-2 large-1"></Navigation>
-  <Email-List box="$ctrl.selectedBox" class="grid-block small-12  medium-4"></Email-List>
-  <Email-Viewer class="grid-block medium-6 large-7"></Email-Viewer>
+  <Email-List box="$ctrl.selectedBox" selected-email="$ctrl.selectedEmail" on-email-selected="$ctrl.selectEmail(email)"
+              class="grid-block small-12  medium-4"></Email-List>
+  <Email-Viewer email="$ctrl.selectedEmail" class="grid-block medium-6 large-7"></Email-Viewer>
 </div>

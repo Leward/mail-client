@@ -3,7 +3,7 @@ class NavigationController {
   constructor() {}
 
   boxClicked(box) {
-    this.boxSelected({box: box});
+    this.onBoxSelected({box: box});
   }
 
 }
@@ -14,6 +14,6 @@ export const Navigation = {
   bindings: {
     boxes: '<',
     selectedBox: '<',
-    boxSelected: '&'
+    onBoxSelected: '&'
   }
 };

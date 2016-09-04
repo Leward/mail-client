@@ -3,7 +3,7 @@
   <section class="block-list">
     <header>{{$ctrl.box.name}}</header>
     <ul>
-      <li ng-repeat="email in $ctrl.box.emails">
+      <li ng-repeat="email in $ctrl.box.emails" ng-click="$ctrl.emailClicked(email)" ng-class="{'selected': $ctrl.selectedEmail === email}">
         <a href="#">{{email.subject}}</a>
       </li>
     </ul>

@@ -1,3 +1,6 @@
 export const EmailViewer = {
-  template: require('./EmailViewer.html')
+  template: require('./EmailViewer.html'),
+  bindings: {
+    email: '<'
+  }
 };
