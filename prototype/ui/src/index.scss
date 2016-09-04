@@ -1,0 +1,26 @@
+@import "settings";
+@import "~foundation-apps/scss/foundation.scss";
+
+Navigation {
+  background-color: $primary-color;
+
+  a {
+    display: block;
+    padding: 0.2em 1em;
+    color: $secondary-color;
+    &:hover, &:focus {
+      color: $secondary-color;
+    }
+    &:hover {
+      background-color: darken($primary-color, 8);
+    }
+  }
+
+  .selected {
+    font-weight: bold;
+  }
+}
+
+Email-List {
+
+}

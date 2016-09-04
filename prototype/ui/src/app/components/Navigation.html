@@ -1,0 +1,9 @@
+<div class="navigation-container grid-content">
+  <ul class="no-bullet">
+    <li ng-repeat="box in $ctrl.boxes">
+      <a href="#" ng-class="{'selected': box === $ctrl.selectedBox}" ng-click="$ctrl.boxClicked(box)">
+        {{box.name}}
+      </a>
+    </li>
+  </ul>
+</div>
