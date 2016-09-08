@@ -6,6 +6,7 @@ import 'foundation-apps/dist/js/foundation-apps-templates';
 import './index.scss';
 
 import {EmailService} from './app/services/EmailService';
+import {GmailService} from './app/services/GmailService';
 
 import {App} from './app/containers/App';
 import {Navigation} from './app/components/Navigation';
@@ -19,6 +20,7 @@ angular
   .module('app', ['ui.router', 'foundation'])
   .config(routesConfig)
   .service('EmailService', EmailService)
+  .service('GmailService', GmailService)
   .component('app', App)
   .component('navigation', Navigation)
   .component('emailList', EmailList)
