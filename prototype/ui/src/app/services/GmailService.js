@@ -1,3 +1,5 @@
+import {Email} from '../model/Email';
+
 const gapiPromise = require('google-client-api')();
 
 const gmailApiPromise = gapiPromise.then(gapi => {
@@ -6,7 +8,7 @@ const gmailApiPromise = gapiPromise.then(gapi => {
   });
 });
 
-const CLIENT_ID = 'YOUR_CLIENT_ID';
+const CLIENT_ID = '';
 const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
 
 const authorizationObject = {
@@ -20,7 +22,7 @@ export class GmailService {
   /**
    * Check if current user has authorized this application.
    * @see <a href="https://developers.google.com/api-client-library/javascript/reference/referencedocs#gapiauthauthorizeparams--------callback">Documentation for gapi.auth.authorize</a>
-   * @returns {Promise<boolean>}
+   * @returns {Promise<Void>}
    */
   checkAuth() {
     return new Promise((resolve, reject) => {
@@ -38,7 +40,7 @@ export class GmailService {
    */
   listLabels() {
     return Promise.all([this.checkAuth(), gmailApiPromise]).then(() => {
-      var request = gapi.client.gmail.users.labels.list({
+      let request = gapi.client.gmail.users.labels.list({
         'userId': 'me'
       });
       return new Promise((resolve) => {
@@ -48,6 +50,14 @@ export class GmailService {
       });
     });
   }
+
+  /**
+   * @returns {Promise<Array<Email>>}
+   */
+  listMessages() {
+    return Promise.all([this.checkAuth(), gmailApiPromise]).then(() => listMessages(gapi));
+  }
+
 
 }
 
@@ -62,4 +72,61 @@ function handleAuthResult(authResult, resolve, reject) {
     resolve();
   }
   reject(authResult.error);
+}
+
+/**
+ *
+ * @param gapi
+ * @returns {Promise<Array<Email>>}
+ */
+function listMessages(gapi) {
+  let request = gapi.client.gmail.users.messages.list({
+    'userId': 'me'
+  });
+  return request
+    .then(response => retrieveMessagesDetails(gapi, response.result.messages.map(getMessageIdFromMessageObject)))
+    .then(messages => messages.map(gmailMessageToEmailObject));
+}
+
+/**
+ *
+ * @param gapi
+ * @param {Array<String>} messagesIds
+ * @returns {Promise<Array<Object>>}
+ */
+function retrieveMessagesDetails(gapi, messagesIds) {
+  let batch = gapi.client.newBatch();
+  messagesIds.forEach((messageId) => {
+    batch.add(gapi.client.gmail.users.messages.get({
+      'userId': 'me',
+      'id': messageId
+    }));
+  });
+  return batch.then(response => {
+    let requestIds = Object.keys(response.result);
+    let messages = [];
+    requestIds.forEach(requestId => messages.push(response.result[requestId].result));
+    return messages;
+  });
+}
+
+/**
+ * @param {Object} message
+ * @returns {String}
+ */
+function getMessageIdFromMessageObject(message) {
+  return message.id;
+}
+
+/**
+ * @param {Object} message
+ * @returns {Email}
+ */
+function gmailMessageToEmailObject(message) {
+  return new Email(getMessageSubject(message));
+}
+
+function getMessageSubject(message) {
+  let header = message.payload.headers.find(header => header.name === 'Subject') || {value: ''};
+  return header.value;
 }

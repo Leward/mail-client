@@ -2,10 +2,14 @@ class NavigationController {
 
   /**
    * @ngInject
+   * @param $rootScope
    * @param {GmailService} GmailService
+   * @param {EmailService} EmailService
    */
-  constructor(GmailService) {
+  constructor($rootScope, GmailService, EmailService) {
+    this.$rootScope = $rootScope;
     this.GmailService = GmailService;
+    this.EmailService = EmailService;
   }
 
   boxClicked(box) {
@@ -18,6 +22,14 @@ class NavigationController {
 
   listLabels() {
     this.GmailService.listLabels().then(console.log);
+  }
+
+  listEMails() {
+    // TODO: For now this simply replace the content of the first inbox.
+    this.GmailService.listMessages().then(emails => {
+      this.EmailService.boxes[0].emails = emails;
+      this.$rootScope.$apply();
+    });
   }
 
 }
